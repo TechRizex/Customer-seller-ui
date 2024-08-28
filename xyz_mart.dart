@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pikaaya_customer_seller/tissue_roll.dart';
+
+import 'aata_maggie.dart';
+import 'masala_maggie_page.dart';
 
 class XYZMart extends StatelessWidget {
   @override
@@ -73,7 +77,7 @@ class XYZMart extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SizedBox(
-              height: 35, // Adjust the height as needed
+              height: 40, // Adjust the height as needed
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Search for listed products",
@@ -84,15 +88,13 @@ class XYZMart extends StatelessWidget {
               ),
             ),
           ),
-
           SizedBox(height: 10),
           Expanded(
-
             child: ListView(
               children: [
-                productCard("Beco Tissue Roll", "₹100", "₹85", 4, "assets/Images/tissue_roll.png"),
-                productCard("Masala Maggie", "₹34", "₹31", 3.5, "assets/Images/masala_maggie.png"),
-                productCard("Aata Maggie", "₹40", "₹35", 4, "assets/Images/aata_maggie.png"),
+                productCard(context, "Beco Tissue Roll", "₹100", "₹85", 4, "assets/Images/tissue_roll.png"),
+                productCard(context, "Masala Maggie", "₹34", "₹31", 3.5, "assets/Images/masala_maggie.png"),
+                productCard(context, "Aata Maggie", "₹40", "₹35", 4, "assets/Images/aata_maggie.png"),
               ],
             ),
           ),
@@ -101,29 +103,64 @@ class XYZMart extends StatelessWidget {
     );
   }
 
-  Widget productCard(String title, String sellingPrice, String landingPrice, double rating, String imagePath) {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(10),
-        leading: Image.asset(imagePath, width: 50, height: 50),
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Selling Price: $sellingPrice", style: TextStyle(color: Colors.black)),
-            Text("Landing Price: $landingPrice", style: TextStyle(color: Colors.green)),
-            Row(
-              children: List.generate(5, (index) {
-                return Icon(
-                  index < rating ? Icons.star : Icons.star_border,
-                  color: Colors.orange,
-                  size: 20,
-                );
-              }),
-            )
-          ],
+  Widget productCard(BuildContext context, String title, String sellingPrice, String landingPrice, double rating, String imagePath) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to specific pages based on the product title
+        if (title == "Beco Tissue Roll") {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TissueRoll()));
+        } else if (title == "Masala Maggie") {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MasalaMaggiePage()));
+        } else if (title == "Aata Maggie") {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AataMaggie()));
+        }
+      },
+      child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: ListTile(
+          contentPadding: EdgeInsets.all(20),
+          leading: Image.asset(
+            imagePath,
+            width: 100, // Increased width of the product image
+            height: 100, // Increased height of the product image
+          ),
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Selling Price: $sellingPrice", style: TextStyle(color: Colors.black)),
+              Text("Landing Price: $landingPrice", style: TextStyle(color: Colors.green)),
+              Row(
+                children: List.generate(5, (index) {
+                  return Icon(
+                    index < rating ? Icons.star : Icons.star_border,
+                    color: Colors.orange,
+                    size: 20,
+                  );
+                }),
+              )
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class ProductDetailPage extends StatelessWidget {
+  final String title;
+
+  ProductDetailPage({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: const Color(0xFF9C27B0),
+      ),
+      body: Center(
+        child: Text('Details of $title', style: TextStyle(fontSize: 24)),
       ),
     );
   }
